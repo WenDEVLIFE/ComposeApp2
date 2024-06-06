@@ -277,12 +277,23 @@ private fun SootheBottomNavigation(modifier: Modifier = Modifier) {
     }
 }
 
+
+@Composable
+fun MySootheAppPortrait() {
+    ComposeApp2Theme {
+        Scaffold(
+            bottomBar = { SootheBottomNavigation() }
+        ) { padding ->
+            HomeScreen(Modifier.padding(padding))
+        }
+    }
+}
 @Preview(showBackground = true, backgroundColor = 0xFFF5F0EE)
 @Composable
 fun GreetingPreview() {
     ComposeApp2Theme {
        Column {
-           ComposeApp2Theme { HomeScreen() }
+           ComposeApp2Theme {MySootheAppPortrait() }
        }
 
     }
