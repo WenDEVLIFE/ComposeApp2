@@ -1,5 +1,6 @@
 package com.example.composeapp2
 
+import android.content.res.Configuration
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,6 +54,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.ui.platform.LocalConfiguration
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +64,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeApp2Theme {
-                GreetingPreview()
+               MySootheApp()
             }
         }
     }
@@ -194,6 +199,8 @@ private data class DrawableStringPair(
 fun FavoriteCollectionsGrid(
     modifier: Modifier = Modifier
 ) {
+
+    // Added LazyHorizontalGrid
     LazyHorizontalGrid(
         rows = GridCells.Fixed(2),
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -208,6 +215,7 @@ fun FavoriteCollectionsGrid(
 }
 
 @Composable
+// Added  Home Section
 fun HomeSection(
     @StringRes title: Int,
     modifier: Modifier = Modifier,
@@ -226,6 +234,8 @@ fun HomeSection(
 }
 
 @Composable
+
+// Our Home Screen
 fun HomeScreen(modifier: Modifier = Modifier) {
     Column(
         modifier
@@ -277,14 +287,83 @@ private fun SootheBottomNavigation(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun SootheNavigationRail(modifier: Modifier = Modifier) {
+    NavigationRail(
+        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        containerColor = MaterialTheme.colorScheme.background,
+    ) {
+        Column(
+            modifier = modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            NavigationRailItem(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(stringResource(R.string.bottom_navigation_home))
+                },
+                selected = true,
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            NavigationRailItem(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(stringResource(R.string.bottom_navigation_profile))
+                },
+                selected = false,
+                onClick = {}
+            )
+        }
+    }
+}
+@Composable
+// This  will check the screen size to make it responsive
+fun MySootheApp() {
+    val configuration = LocalConfiguration.current
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_PORTRAIT -> {
+            MySootheAppPortrait()
+        }
+        Configuration.ORIENTATION_LANDSCAPE -> {
+            MySootheAppLandscape()
+        }
+    }
+}
 
 @Composable
+
+// Our Portrait
 fun MySootheAppPortrait() {
     ComposeApp2Theme {
         Scaffold(
+            // Set it to fill the screen and to bottom
             bottomBar = { SootheBottomNavigation() }
         ) { padding ->
             HomeScreen(Modifier.padding(padding))
+        }
+    }
+}
+
+@Composable
+fun MySootheAppLandscape() {
+    ComposeApp2Theme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Row {
+                SootheNavigationRail()
+                HomeScreen()
+            }
         }
     }
 }
